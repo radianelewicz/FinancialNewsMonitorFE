@@ -1,4 +1,4 @@
-export type StockValue = {
+export type TStockValue = {
     date:Date;
     open:number;
     high: number;

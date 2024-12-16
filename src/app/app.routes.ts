@@ -14,10 +14,4 @@ export const routes: Routes = [
             return import('./external/external.component').then(m => m.ExternalComponent);
         }
     },
-    {
-        path: ':symbol',
-        loadComponent: () => {
-            return import('./components/stockdata/stockdata.component').then(m => m.StockdataComponent);
-        }
-    }
 ];

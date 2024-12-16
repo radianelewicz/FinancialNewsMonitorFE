@@ -1,26 +1,21 @@
-import { Component, inject, OnInit, signal } from '@angular/core';
+import { Component, inject, OnInit, signal, Type } from '@angular/core';
 import { FinancialService } from '../services/financial.service';
-import { Symbol } from '../model/symbol.type';
+import { TSymbol } from '../model/symbol.type';
+import { SymbolsComponent } from '../components/symbols/symbols.component';
 import { catchError } from 'rxjs';
-import { MatTableModule } from '@angular/material/table';
-import { MatSortModule } from '@angular/material/sort';
-import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-home',
-  imports: [MatTableModule, MatSortModule],
+  imports: [SymbolsComponent],
   templateUrl: './home.component.html',
   styleUrl: './home.component.css'
 })
-export class HomeComponent implements OnInit{
-  financialService = inject(FinancialService);
-  router = inject(Router);
-  mockSymbols = signal<Array<Symbol>>([]);
-  storedSymbols = signal<Array<Symbol>>([]);
-  columnsToDisplay = signal(['symbol', 'name', 'type', 'region', 'marketOpen', 'marketClose', 'timezone', 'currency', 'matchScore', 'details']);
+export class HomeComponent implements OnInit {
+  private financialService = inject(FinancialService);
+  storedSymbols = signal<Array<TSymbol>>([]);
 
   ngOnInit(): void {
-    this.mockSymbols.set(this.financialService.items);
+    //this.storedSymbols.set(this.financialService.mockSymbols);
     this.financialService
       .getStoredSymbols()
       .pipe(catchError(err =>
@@ -29,10 +24,5 @@ export class HomeComponent implements OnInit{
           throw err;
         }))
       .subscribe(symbols => this.storedSymbols.set(symbols));
-  }
-
-  showStockData(symbol:string){
-    this.router.navigate(['/'+symbol]);
-    //this.financialService.getSymbolStockData(symbol);
   }
 }

@@ -1,4 +1,4 @@
-export type Symbol = {
+export type TSymbol = {
     symbol:string;
     name:string,
     type:string,

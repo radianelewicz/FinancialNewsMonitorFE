@@ -1,2 +1,7 @@
-<h2>External Stock Data</h2>
-<input placeholder="Type something event!" type="text" (keyup)="eventKeyUpHandler($event)">
+<h2>External Symbols</h2>
+<span>
+    <input placeholder="Type keyword!" type="text" [(ngModel)]="keyword"/>
+    <button (click)="getExternalSymbols()"> Search </button>
+</span>
+<label *ngIf="isDataLoaded() && externalSymbols().length > 0">No data found</label>
+<app-symbols *ngIf="externalSymbols().length > 0" [symbols]="externalSymbols()" [isForExternal]="true"></app-symbols>

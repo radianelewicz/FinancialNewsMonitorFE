@@ -1,7 +1,7 @@
-import { MetaData } from "./metaData.type"
-import { StockValue } from "./stockValue.type";
+import { TMetaData } from "./metaData.type"
+import { TStockValue } from "./stockValue.type";
 
-export type StockData = {
-    metaData:MetaData;
-    stockValues:Array<StockValue>
+export type TStockData = {
+    metaData:TMetaData;
+    stockValues:Array<TStockValue>
 }
