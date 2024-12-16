@@ -1,0 +1,62 @@
+<h2>Stored Stock Data</h2>
+<table
+    mat-table
+    mat-paginator
+    matSort
+    matSortActive="symbol"
+    matSortActive="asc"
+    [dataSource]="mockSymbols()">
+
+  <ng-container matColumnDef="symbol">
+    <mat-header-cell *matHeaderCellDef mat-sort-header> Symbol </mat-header-cell>
+    <mat-cell *matCellDef="let row"> {{row.symbol}} </mat-cell>
+  </ng-container>
+
+  <ng-container matColumnDef="name">
+    <mat-header-cell *matHeaderCellDef mat-sort-header> Name </mat-header-cell>
+    <mat-cell *matCellDef="let row"> {{row.name}} </mat-cell>
+  </ng-container>
+
+  <ng-container matColumnDef="type">
+    <mat-header-cell *matHeaderCellDef mat-sort-header> Type </mat-header-cell>
+    <mat-cell *matCellDef="let row"> {{row.type}} </mat-cell>
+  </ng-container>
+
+  <ng-container matColumnDef="region">
+    <mat-header-cell *matHeaderCellDef mat-sort-header> Region </mat-header-cell>
+    <mat-cell *matCellDef="let row"> {{row.region}} </mat-cell>
+  </ng-container>
+
+  <ng-container matColumnDef="marketOpen">
+    <mat-header-cell *matHeaderCellDef mat-sort-header> Market Open </mat-header-cell>
+    <mat-cell *matCellDef="let row"> {{row.marketOpen}} </mat-cell>
+  </ng-container>
+
+  <ng-container matColumnDef="marketClose">
+    <mat-header-cell *matHeaderCellDef mat-sort-header> Market Close </mat-header-cell>
+    <mat-cell *matCellDef="let row"> {{row.marketClose}} </mat-cell>
+  </ng-container>
+
+  <ng-container matColumnDef="timezone">
+    <mat-header-cell *matHeaderCellDef mat-sort-header> Timezone </mat-header-cell>
+    <mat-cell *matCellDef="let row"> {{row.timezone}} </mat-cell>
+  </ng-container>
+
+  <ng-container matColumnDef="currency" >
+    <mat-header-cell *matHeaderCellDef mat-sort-header> Currency </mat-header-cell>
+    <mat-cell *matCellDef="let row"> {{row.currency}} </mat-cell>
+  </ng-container>
+
+  <ng-container matColumnDef="matchScore">
+    <mat-header-cell *matHeaderCellDef mat-sort-header> Match Score </mat-header-cell>
+    <mat-cell *matCellDef="let row"> {{row.matchScore}} </mat-cell>
+  </ng-container>
+
+  <ng-container matColumnDef="details">
+    <mat-header-cell *matHeaderCellDef mat-sort-header> Details </mat-header-cell>
+    <mat-cell *matCellDef="let row"> <button mat-raised-button (click)="showStockData(row.symbol)"> Show </button></mat-cell>
+  </ng-container>
+
+  <mat-header-row *matHeaderRowDef="columnsToDisplay()"></mat-header-row>
+  <mat-row *matRowDef="let row; columns: columnsToDisplay()"></mat-row>
+</table>

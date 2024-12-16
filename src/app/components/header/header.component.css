@@ -1,0 +1,21 @@
+header {
+    display: flex;
+    padding-inline: 64px;
+    padding-block: 32px;
+    background-color: darkslategray;
+    color: white;
+    align-items: center;
+    justify-content: space-between;
+
+    nav {
+        width: 25%;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+
+        li {
+            cursor: pointer;
+            list-style: none;
+        }
+    }
+}
