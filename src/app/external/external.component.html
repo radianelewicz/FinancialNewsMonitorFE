@@ -1,7 +1,6 @@
-<h2>External Symbols</h2>
+<h1 class="header">External Symbols</h1>
 <span>
-    <input placeholder="Type keyword!" type="text" [(ngModel)]="keyword"/>
-    <button (click)="getExternalSymbols()"> Search </button>
+    <input placeholder="Type keyword..." type="text" class="input" [(ngModel)]="keyword"/>
+    <button (click)="getExternalSymbols()" class="button"> Search </button>
 </span>
-<label *ngIf="isDataLoaded() && externalSymbols().length > 0">No data found</label>
-<app-symbols *ngIf="externalSymbols().length > 0" [symbols]="externalSymbols()" [isForExternal]="true"></app-symbols>
+<ng-container #symbolsContainer></ng-container>

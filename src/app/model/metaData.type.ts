@@ -1,6 +1,5 @@
 export type TMetaData = {
     information:string;
-    symbol:string,
-    date:Date,
+    lastRefreshed:Date,
     timeZone:string,
 }

@@ -1,7 +1,7 @@
 {
-    "/api/*": {
+    "api/*": {
       "target": "https://localhost:44363",
       "secure": false,
-      "mode": "no-cors"
+      "changeOrigin": true
     }
   }

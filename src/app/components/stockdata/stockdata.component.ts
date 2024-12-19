@@ -1,45 +1,47 @@
-import { Component, inject, input, OnInit, signal } from '@angular/core';
+import { Component, inject, input, output, OnInit, signal, ViewChild } from '@angular/core';
 import { TStockData } from '../../model/stockData.type';
 import { NgIf } from '@angular/common';
-import { MatTableModule } from '@angular/material/table';
-import { MatSortModule } from '@angular/material/sort';
-import { MatPaginatorModule } from '@angular/material/paginator';
+import { MatTableDataSource, MatTableModule } from '@angular/material/table';
+import { MatSort, MatSortModule } from '@angular/material/sort';
+import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 import { TStockValue } from '../../model/stockValue.type';
 import { TMetaData } from '../../model/metaData.type';
 import { FinancialService } from '../../services/financial.service';
 import { TSymbol } from '../../model/symbol.type';
 import { catchError } from 'rxjs';
-import { TSymbolStockData } from '../../model/symbolStockData.type';
+import { MatCardModule } from '@angular/material/card';
 
 @Component({
   selector: 'app-stockdata',
-  imports: [NgIf, MatTableModule, MatSortModule, MatPaginatorModule],
+  imports: [NgIf, MatTableModule, MatSortModule, MatPaginatorModule, MatCardModule],
   templateUrl: './stockdata.component.html',
   styleUrl: './stockdata.component.css'
 })
 export class StockdataComponent implements OnInit {
-  private _metaData: TMetaData = {
+  private _defaultMetaData: TMetaData = {
       information: '',
-      date: new Date(),
-      symbol: '',
+      lastRefreshed: new Date(),
       timeZone: ''
     };
-  private _stockValues: Array<TStockValue> = [
+  private _defaultStockValues: Array<TStockValue> = [
     ]; 
   private _defaultStockData: TStockData = {
-      metaData: this._metaData,
-      stockValues: this._stockValues
+      metaDataResponse: this._defaultMetaData,
+      stockValuesResponse: this._defaultStockValues
     };
-  stockData = signal<TStockData>(this._defaultStockData);
   private _financialService = inject(FinancialService);
   isForExternal = input(false);
   symbol = input<TSymbol>();
+  isDeleted = output<boolean>();
   columnsToDisplay = signal(['date', 'open', 'high', 'low', 'close', 'volume']);
   storedSymbols = signal<Array<TSymbol>>([]);
+  stockData = signal<TStockData>(this._defaultStockData);
+  dataSource!: MatTableDataSource<TStockValue>;
+  @ViewChild(MatPaginator) paginator!:MatPaginator;
+  @ViewChild(MatSort) sort!:MatSort;
 
   ngOnInit(): void {
     if (!this.isForExternal()) {
-      //this.stockData.set(this._financialService.mockStockData);
       this._financialService
         .getStoredStockData(this.symbol()?.symbol as string)
         .pipe(catchError(err =>
@@ -47,10 +49,14 @@ export class StockdataComponent implements OnInit {
             console.log(err)
             throw err;
           }))
-        .subscribe(storedStockData => this.stockData.set(storedStockData));
+          .subscribe(storedStockData => {
+            this.stockData.set(storedStockData);
+            this.dataSource = new MatTableDataSource<TStockValue>(storedStockData.stockValuesResponse);
+            this.dataSource.paginator = this.paginator;
+            this.dataSource.sort = this.sort;
+          });
     }
     else {
-      //this.stockData.set(this._financialService.mockStockData);
       this._financialService
         .getExternalStockData(this.symbol()?.symbol as string)
         .pipe(catchError(err =>
@@ -58,7 +64,18 @@ export class StockdataComponent implements OnInit {
             console.log(err)
             throw err;
           }))
-        .subscribe(storedStockData => this.stockData.set(storedStockData));
+        .subscribe(externalStockData => {
+          this.stockData.set(externalStockData);
+          this.dataSource = new MatTableDataSource<TStockValue>(externalStockData.stockValuesResponse);
+          this.dataSource.paginator = this.paginator;
+          this.dataSource.sort = this.sort;
+        });
+        this._financialService.getStoredSymbols()
+        .pipe(catchError(err => {
+          console.log(err)
+            throw err;
+        }))
+        .subscribe(response => this.storedSymbols.set(response));
     }
   }
 
@@ -68,18 +85,15 @@ export class StockdataComponent implements OnInit {
           console.log(err)
             throw err;
         }))
-      .subscribe(response => response);
+      .subscribe(response => {
+        if (response) {
+          this.isDeleted.emit(true);
+        }
+      });
   }
 
   saveSymbolStockData() {
-    this._financialService.getStoredSymbols()
-      .pipe(catchError(err => {
-        console.log(err)
-          throw err;
-      }))
-      .subscribe(response => this.storedSymbols.set(response));
-
-    if (this.storedSymbols().find(x => x.symbol === this.symbol()?.symbol))
+    if (this.storedSymbols()?.find(x => x.symbol === this.symbol()?.symbol))
     {
       return this.updateSymbolStockData();
     }
@@ -89,7 +103,7 @@ export class StockdataComponent implements OnInit {
           console.log(err)
             throw err;
         }))
-      .subscribe(response => response);
+      .subscribe(() => this.storedSymbols().push(this.symbol() as TSymbol));
   }
 
   updateSymbolStockData() {
@@ -98,6 +112,11 @@ export class StockdataComponent implements OnInit {
           console.log(err)
             throw err;
         }))
-      .subscribe(response => response);
+      .subscribe(response => {
+        if(response){
+          const itemIndex = this.storedSymbols().findIndex(obj => obj.symbol === this.symbol()?.symbol);
+          this.storedSymbols()[itemIndex] = this.symbol() as TSymbol;
+        }
+      });
   }
 }

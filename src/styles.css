@@ -1,16 +1,43 @@
-/* You can add global styles to this file, and also import other style files */
-html, body {
-    margin: 0;
-    padding: 0;
-}
-
-* {
-    outline: none;
-}
-
 input {
-    margin-top: 10px;
+    background-color: darkslategray;
+    margin: 10px;
+    color: white;
+    font-size: 12px;
+    padding: 15px 32px;
+    border: none;
 }
 
-html, body { height: 100%; }
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+button {
+    margin: 10px;
+}
+
+label {
+    margin: 10px
+}
+
+li {
+    list-style: none;
+}
+
+::placeholder {
+    color: white;
+  }
+
+.button {
+    background-color: darkslategray;
+    border: none;
+    color: white;
+    padding: 15px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 12px;
+  }
+
+.header {
+    text-align: center;
+    background: darkslategray;
+    color: white;
+    font-size: 30px;
+    width: 100%;
+  }
